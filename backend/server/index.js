@@ -1,8 +1,12 @@
 import express from "express";
 import nodemailer from "nodemailer";
+import sgMail from "@sendgrid/mail";
+
 import cors from "cors";
 import dotenv from "dotenv";
 
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+console.log("SendGrid key loaded:", process.env.SENDGRID_API_KEY?.startsWith("SG."));
 dotenv.config();
 
 const app = express();
@@ -33,32 +37,25 @@ app.post("/", async (req, res) => {
   }
 
   try {
-    const transporter = nodemailer.createTransport({
-      host: "smtp.sendgrid.net",
-      port: 587,
-      secure: false,
-      auth: {
-        user: "apikey", // ✅ MUST be "apikey"
-        pass: process.env.SENDGRID_API_KEY, // ✅ SendGrid API Key
+    await sgMail.send({
+      to: process.env.TO_EMAIL,
+      from: {
+        email: process.env.VERIFIED_EMAIL, // MUST be verified in SendGrid
+        name: "Portfolio Contact",
       },
-    });
-
-    await transporter.sendMail({
-      from: `"Portfolio Contact" <${process.env.EMAIL_USER}>`, // Must be verified in SendGrid
-      to: process.env.EMAIL_USER, // Where you want to receive messages
       subject: "Message from Portfolio Contact Form",
       html: `
-    <h3>New Portfolio Message</h3>
-    <p>${message}</p>
-    <hr/>
-    <p><strong>Sender Name:</strong> ${name}</p>
-    <p><strong>Sender Email:</strong> ${email}</p>
-  `,
+        <h3>New Portfolio Message</h3>
+        <p>${message}</p>
+        <hr/>
+        <p><strong>Sender Name:</strong> ${name}</p>
+        <p><strong>Sender Email:</strong> ${email}</p>
+      `,
     });
 
     res.status(200).json({ success: true, message: "Email sent successfully" });
   } catch (error) {
-    console.error("Email error:", error);
+    console.error("SendGrid error:", error.response?.body || error);
     res.status(500).json({ success: false, message: "Email failed to send" });
   }
 });
