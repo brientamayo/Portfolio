@@ -25,7 +25,7 @@ app.get("/", (req, res) => {
 });
 
 /* ===== Email Route ===== */
-app.post("/send-email", async (req, res) => {
+app.post("/", async (req, res) => {
   const { name, email, message } = req.body;
 
   if (!name || !email || !message) {

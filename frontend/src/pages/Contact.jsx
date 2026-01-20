@@ -39,7 +39,7 @@ function Contact() {
     setIsSending(true);
 
     try {
-      const res = await fetch("https://portfolio-vvne.onrender.com/send-email", {
+      const res = await fetch("https://portfolio-dmrk.onrender.com/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, message }),
