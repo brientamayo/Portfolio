@@ -39,10 +39,7 @@ app.post("/", async (req, res) => {
   try {
     await sgMail.send({
       to: process.env.TO_EMAIL,
-      from: {
-        email: process.env.VERIFIED_EMAIL, // MUST be verified in SendGrid
-        name: "Portfolio Contact",
-      },
+      from: process.env.VERIFIED_EMAIL,
       subject: "Message from Portfolio Contact Form",
       html: `
         <h3>New Portfolio Message</h3>
