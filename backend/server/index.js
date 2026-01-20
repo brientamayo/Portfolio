@@ -6,7 +6,10 @@ import cors from "cors";
 import dotenv from "dotenv";
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-console.log("SendGrid key loaded:", process.env.SENDGRID_API_KEY?.startsWith("SG."));
+console.log(
+  "SendGrid key loaded:",
+  process.env.SENDGRID_API_KEY?.startsWith("SG."),
+);
 dotenv.config();
 
 const app = express();
@@ -37,17 +40,20 @@ app.post("/", async (req, res) => {
   }
 
   try {
+    const toEmail = process.env.TO_EMAIL || "fallback@example.com";
+    const verifiedEmail = process.env.VERIFIED_EMAIL || "fallback@example.com";
+
     await sgMail.send({
-      to: process.env.TO_EMAIL,
-      from: process.env.VERIFIED_EMAIL,
+      to: toEmail,
+      from: verifiedEmail,
       subject: "Message from Portfolio Contact Form",
       html: `
-        <h3>New Portfolio Message</h3>
-        <p>${message}</p>
-        <hr/>
-        <p><strong>Sender Name:</strong> ${name}</p>
-        <p><strong>Sender Email:</strong> ${email}</p>
-      `,
+    <h3>New Portfolio Message</h3>
+    <p>${message}</p>
+    <hr/>
+    <p><strong>Sender Name:</strong> ${name}</p>
+    <p><strong>Sender Email:</strong> ${email}</p>
+  `,
     });
 
     res.status(200).json({ success: true, message: "Email sent successfully" });
