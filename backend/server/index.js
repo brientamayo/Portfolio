@@ -2,6 +2,7 @@ import express from "express";
 import nodemailer from "nodemailer";
 import cors from "cors";
 import dotenv from "dotenv";
+import { google } from "googleapis";
 
 dotenv.config();
 
@@ -13,11 +14,20 @@ app.use(express.json());
 app.use(
   cors({
     origin: [
-      "http://localhost:5173",              // local dev
-      "https://your-project-name.web.app"   // firebase domain
+      "http://localhost:5173",
+      "https://your-project-name.web.app"
     ],
+    methods: ["GET", "POST"],
   })
 );
+
+/* ===== OAuth2 Setup ===== */
+const oAuth2Client = new google.auth.OAuth2(
+  process.env.CLIENT_ID,
+  process.env.CLIENT_SECRET,
+  "https://developers.google.com/oauthplayground"
+);
+oAuth2Client.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
 
 /* ===== Test Route ===== */
 app.get("/", (req, res) => {
@@ -33,24 +43,31 @@ app.post("/send-email", async (req, res) => {
   }
 
   try {
+    const accessToken = await oAuth2Client.getAccessToken();
+
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
+        type: "OAuth2",
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        clientId: process.env.CLIENT_ID,
+        clientSecret: process.env.CLIENT_SECRET,
+        refreshToken: process.env.REFRESH_TOKEN,
+        accessToken: accessToken.token,
       },
     });
 
     await transporter.sendMail({
-      from: `"${name}" <${email}>`,
-      to: process.env.EMAIL_USER,
+      from: `"Portfolio Contact" <${process.env.EMAIL_USER}>`, // Must be your Gmail
+      to: process.env.EMAIL_USER,                              // Receive messages here
+      replyTo: email,                                          // Visitor email
       subject: "Message from Portfolio Contact Form",
       html: `
         <h3>New Portfolio Message</h3>
         <p>${message}</p>
         <hr/>
-        <p><strong>Sender:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Sender Name:</strong> ${name}</p>
+        <p><strong>Sender Email:</strong> ${email}</p>
       `,
     });
 
