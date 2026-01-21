@@ -1,8 +1,10 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { FaCheckCircle, FaTimes } from "react-icons/fa";
-import '../index.css';
+import ContactSkeleton from "../Skeleton/ContactSkeleton";
+import "../index.css";
 
 function Contact() {
+  const [loading, setLoading] = useState(true); // ✅ New loading state
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -14,6 +16,11 @@ function Contact() {
   const nameRef = useRef(null);
   const emailRef = useRef(null);
   const messageRef = useRef(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 800); // simulate loading
+    return () => clearTimeout(timer);
+  }, []);
 
   const sendEmail = async () => {
     if (isSending) return;
@@ -44,16 +51,19 @@ function Contact() {
     setIsSending(true);
 
     try {
-      const res = await fetch("https://portfolio-mxza.onrender.com/send-email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, message }),
-      });
+      const res = await fetch(
+        "https://portfolio-mxza.onrender.com/send-email",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, message }),
+        },
+      );
 
       const data = await res.json();
 
       if (data.success) {
-        setShowSuccessModal(true); // ✅ Show the modal instead of green toast
+        setShowSuccessModal(true);
         setName("");
         setEmail("");
         setMessage("");
@@ -70,6 +80,8 @@ function Contact() {
       setIsSending(false);
     }
   };
+
+  if (loading) return <ContactSkeleton />; // ✅ Show skeleton while loading
 
   return (
     <section className="min-h-screen pt-24 pb-12 bg-linear-to-br from-slate-900 to-slate-800 flex items-center relative">
@@ -94,7 +106,9 @@ function Contact() {
           {/* Name & Email */}
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1 flex flex-col">
-              <label className="text-slate-300 mb-1 font-medium">First & Last Name</label>
+              <label className="text-slate-300 mb-1 font-medium">
+                First & Last Name
+              </label>
               <input
                 type="text"
                 placeholder="Your Name"
@@ -106,7 +120,9 @@ function Contact() {
               />
             </div>
             <div className="flex-1 flex flex-col">
-              <label className="text-slate-300 mb-1 font-medium">E-mail Address</label>
+              <label className="text-slate-300 mb-1 font-medium">
+                E-mail Address
+              </label>
               <input
                 type="email"
                 placeholder="Email"
@@ -170,29 +186,6 @@ function Contact() {
           </div>
         </div>
       )}
-
-      
-
-      {/* Animations */}
-      <style>
-        {`
-        @keyframes slide-in-right {
-          0% { opacity: 0; transform: translateX(100%); }
-          100% { opacity: 1; transform: translateX(0); }
-        }
-        .animate-slide-in-right {
-          animation: slide-in-right 0.4s ease forwards;
-        }
-
-        @keyframes fade-in-up {
-          0% { opacity: 0; transform: translateY(50px); }
-          100% { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in-up {
-          animation: fade-in-up 0.4s ease forwards;
-        }
-      `}
-      </style>
     </section>
   );
 }

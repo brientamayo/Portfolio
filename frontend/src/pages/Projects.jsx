@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import RHUSScreenshot from "../assets/images/rhus-ss.png";
 import ReadMeScreenshot from "../assets/images/readme-ss.png";
 import BookHavenScreenshot from "../assets/images/bookhaven-ss.png";
@@ -6,7 +6,9 @@ import { motion } from "framer-motion";
 import ImageSlider from "../utils/ImageSlider";
 import { FaHtml5, FaCss3Alt, FaJs, FaPhp, FaDatabase } from "react-icons/fa";
 import { SiTailwindcss, SiFirebase, SiDjango, SiPython } from "react-icons/si";
-import '../index.css';
+import "../index.css";
+import ProjectsSkeleton from "../Skeleton/ProjectsSkeleton";
+
 const techIcons = {
   HTML: <FaHtml5 />,
   CSS: <FaCss3Alt />,
@@ -51,7 +53,15 @@ const projects = [
 
 const Projects = () => {
   const [index, setIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
   const project = projects[index];
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1000); // simulate loading
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) return <ProjectsSkeleton />;
 
   return (
     <motion.section
@@ -62,12 +72,10 @@ const Projects = () => {
       className="min-h-screen pt-24 pb-12 flex items-center"
     >
       <div className="max-w-341.5 mx-auto px-5 md:px-10 lg:px-20 ">
-        {/* Title */}
         <h1 className="text-3xl md:text-4xl font-semibold mb-12">
           My <span className="text-emerald-400">Projects</span>
         </h1>
 
-        {/* Content */}
         <div className="flex flex-col-reverse lg:flex-row gap-12">
           {/* LEFT: Details */}
           <div className="lg:w-1/2 space-y-4 text-sm md:text-base">
@@ -86,7 +94,6 @@ const Projects = () => {
               {project.description}
             </p>
 
-            {/* Tech Stack */}
             <div className="flex flex-wrap gap-3 pt-3">
               {project.technologies.map((tech, i) => (
                 <div

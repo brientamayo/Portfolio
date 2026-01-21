@@ -1,21 +1,32 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import AboutPic from "../assets/images/about_me_pic.jpg";
 import { motion } from "framer-motion";
 import "../index.css";
+import AboutSkeleton from "../Skeleton/AboutSkeleton";
+
 const About = () => {
+  const [loading, setLoading] = useState(true);
+
   const getAge = (birthDate) => {
     const today = new Date();
     const birth = new Date(birthDate);
     let age = today.getFullYear() - birth.getFullYear();
     const m = today.getMonth() - birth.getMonth();
     if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
-      age--; // Birthday hasn’t occurred yet this year
+      age--;
     }
     return age;
   };
 
   const myBirthday = "2001-10-30"; // YYYY-MM-DD
   const age = getAge(myBirthday);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1000); // simulate loading delay
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) return <AboutSkeleton />;
 
   return (
     <motion.section

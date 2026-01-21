@@ -1,9 +1,20 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { FaGithub, FaFacebook, FaLinkedin, FaEye } from "react-icons/fa";
 import ProfilePic from "../assets/images/profile_pic.jpg";
 import { motion } from "framer-motion";
 import "../index.css";
+import HomeSkeleton from "../Skeleton/HomeSkeleton";
+
 const Home = () => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1000); // simulate load delay
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) return <HomeSkeleton />;
+
   return (
     <motion.section
       initial={{ opacity: 0, y: 10 }}
@@ -46,6 +57,8 @@ const Home = () => {
             <div className="flex flex-wrap items-center gap-4 mt-4">
               <a
                 href="https://www.canva.com/design/DAG5w78xXKI/VQXq5VM3ig3PPOvrBelGEA/edit"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="
                   px-6 py-2
                   rounded-full
