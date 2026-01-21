@@ -4,6 +4,10 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+if (!process.env.BREVO_API_KEY) {
+  console.error("❌ BREVO_API_KEY is missing on startup");
+}
+
 const app = express();
 
 /* ===== Middleware ===== */
@@ -32,6 +36,8 @@ app.post("/send-email", async (req, res) => {
   }
 
   try {
+    console.log("Brevo key prefix:", process.env.BREVO_API_KEY?.slice(0, 8));
+
     const response = await fetch("https://api.brevo.com/v3/smtp/email", {
       method: "POST",
       headers: {
