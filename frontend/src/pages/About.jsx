@@ -1,8 +1,22 @@
 import React from "react";
 import AboutPic from "../assets/images/about_me_pic.jpg";
 import { motion } from "framer-motion";
-import '../index.css';
+import "../index.css";
 const About = () => {
+  const getAge = (birthDate) => {
+    const today = new Date();
+    const birth = new Date(birthDate);
+    let age = today.getFullYear() - birth.getFullYear();
+    const m = today.getMonth() - birth.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+      age--; // Birthday hasn’t occurred yet this year
+    }
+    return age;
+  };
+
+  const myBirthday = "2001-10-30"; // YYYY-MM-DD
+  const age = getAge(myBirthday);
+
   return (
     <motion.section
       initial={{ opacity: 0, y: 10 }}
@@ -46,7 +60,7 @@ const About = () => {
                   Brien Tamayo
                 </p>
                 <p>
-                  <span className="text-emerald-400 font-medium">Age:</span> 22
+                  <span className="text-emerald-400 font-medium">Age:</span> {age}
                 </p>
                 <p>
                   <span className="text-emerald-400 font-medium">Address:</span>{" "}

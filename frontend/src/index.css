@@ -1,11 +1,11 @@
 @import "tailwindcss";
 
 @font-face {
-  font-family: 'JetBrains Mono';
-  src: url('./assets/fonts/JetBrainsMono-Regular.ttf');
+  font-family: "JetBrains Mono";
+  src: url("./assets/fonts/JetBrainsMono-Regular.ttf");
 }
 body {
-  font-family: 'JetBrains Mono';
+  font-family: "JetBrains Mono";
 }
 
 html {
@@ -19,7 +19,7 @@ html {
   }
 
   body::-webkit-scrollbar {
-    width: 10px; 
+    width: 10px;
   }
 
   body::-webkit-scrollbar-track {
@@ -29,10 +29,38 @@ html {
   body::-webkit-scrollbar-thumb {
     background-color: #10b981;
     border-radius: 9999px;
-    border: 2px solid #1e293b; 
+    border: 2px solid #1e293b;
   }
 
   body::-webkit-scrollbar-thumb:active {
     background-color: #059669;
   }
+}
+
+@keyframes slide-in-right {
+  0% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.animate-slide-in-right {
+  animation: slide-in-right 0.4s ease forwards;
+}
+
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-in-up {
+  animation: fade-in-up 0.4s ease forwards;
 }
