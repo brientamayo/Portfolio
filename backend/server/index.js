@@ -15,7 +15,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: ["https://your-project-name.web.app"],
+    origin: ["https://portfolio-60a7f.web.app"],
   })
 );
 

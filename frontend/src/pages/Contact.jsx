@@ -135,8 +135,8 @@ function Contact() {
           <button
             onClick={sendEmail}
             disabled={isSending}
-            className={`w-full py-3 px-6 rounded-full font-semibold text-white transition-all cursor-pointer 
-            ${isSending ? "bg-slate-600 cursor-not-allowed" : "bg-emerald-500 hover:bg-emerald-600"}
+            className={`w-full py-3 px-6 rounded-full font-semibold text-white transition-all 
+            ${isSending ? "bg-slate-600 cursor-not-allowed" : "bg-emerald-500 hover:bg-emerald-600 cursor-pointer"}
           `}
           >
             {isSending ? "Sending..." : "Send Message"}
