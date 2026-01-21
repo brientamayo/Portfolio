@@ -24,14 +24,14 @@ export default function Navbar() {
       <div className="max-w-341.5 mx-auto px-4 md:px-8 lg:px-12 xl:px-16">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <NavLink to="/" className="text-lg font-semibold text-white">
+          <NavLink to="/" className="text-lg font-semibold text-white" draggable={false}>
             Brien<span className="text-emerald-400">.</span>
           </NavLink>
 
           {/* Desktop Links */}
           <div className="hidden md:flex items-center space-x-8">
             {navLinks.map((link) => (
-              <NavLink key={link.name} to={link.path} className={getLinkClass}>
+              <NavLink key={link.name} to={link.path} className={getLinkClass} draggable={false}>
                 {link.name}
               </NavLink>
             ))}

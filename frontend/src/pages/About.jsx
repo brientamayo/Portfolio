@@ -34,6 +34,7 @@ const About = () => {
                   src={AboutPic}
                   alt="About Brien Tamayo"
                   className="w-full h-full object-cover rounded"
+                  draggable={false}
                 />
               </div>
             </div>

@@ -30,6 +30,7 @@ const ImageSlider = ({ project, projectsLength, index, setIndex }) => {
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: direction > 0 ? -300 : 300, opacity: 0 }}
             transition={{ type: "spring", stiffness: 260, damping: 30 }}
+            draggable={false}
           />
         </AnimatePresence>
       </div>

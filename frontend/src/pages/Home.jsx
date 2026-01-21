@@ -2,7 +2,7 @@ import React from "react";
 import { FaGithub, FaFacebook, FaLinkedin, FaEye } from "react-icons/fa";
 import ProfilePic from "../assets/images/profile_pic.jpg";
 import { motion } from "framer-motion";
-import '../index.css';
+import "../index.css";
 const Home = () => {
   return (
     <motion.section
@@ -30,13 +30,10 @@ const Home = () => {
         <div className="w-full flex flex-col-reverse md:flex-row items-center gap-10">
           {/* Left Side */}
           <div className="md:w-1/2 flex flex-col space-y-4 text-left">
-            <p className="text-emerald-400 font-medium">
-              Frontend Developer
-            </p>
+            <p className="text-emerald-400 font-medium">Frontend Developer</p>
 
             <h1 className="text-3xl md:text-5xl font-bold leading-tight">
-              Hello, I'm{" "}
-              <span className="text-emerald-400">Brien Tamayo</span>
+              Hello, I'm <span className="text-emerald-400">Brien Tamayo</span>
             </h1>
 
             <p className="text-slate-300 md:text-lg text-sm max-w-md mx-auto md:mx-0">
@@ -58,6 +55,7 @@ const Home = () => {
                   transition
                   flex items-center gap-2
                 "
+                draggable={false}
               >
                 <span>View CV</span>
                 <FaEye />
@@ -69,6 +67,7 @@ const Home = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-emerald-300 transition"
+                  draggable={false}
                 >
                   <FaGithub />
                 </a>
@@ -77,6 +76,7 @@ const Home = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-emerald-300 transition"
+                  draggable={false}
                 >
                   <FaFacebook />
                 </a>
@@ -85,6 +85,7 @@ const Home = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-emerald-300 transition"
+                  draggable={false}
                 >
                   <FaLinkedin />
                 </a>
@@ -116,6 +117,7 @@ const Home = () => {
                   rounded-full
                   object-cover
                 "
+                draggable={false}
               />
             </div>
           </div>
