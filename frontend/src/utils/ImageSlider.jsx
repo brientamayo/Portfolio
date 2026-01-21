@@ -39,7 +39,7 @@ const ImageSlider = ({ project, projectsLength, index, setIndex }) => {
       <div className="flex justify-end gap-3">
         <button
           onClick={prevProject}
-          className="px-5 py-2 rounded-full border border-emerald-500
+          className="cursor-pointer px-5 py-2 rounded-full border border-emerald-500
                      text-emerald-500 hover:bg-emerald-500 hover:text-white
                      transition text-sm"
         >
@@ -48,7 +48,7 @@ const ImageSlider = ({ project, projectsLength, index, setIndex }) => {
 
         <button
           onClick={nextProject}
-          className="px-5 py-2 rounded-full border border-emerald-500
+          className="cursor-pointer px-5 py-2 rounded-full border border-emerald-500
                      text-emerald-500 hover:bg-emerald-500 hover:text-white
                      transition text-sm"
         >
