@@ -1,5 +1,4 @@
 import express from "express";
-import nodemailer from "nodemailer";
 import cors from "cors";
 import dotenv from "dotenv";
 
@@ -12,29 +11,16 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: [
-      "https://your-project-name.web.app", // Firebase frontend
-    ],
+    origin: ["https://your-project-name.web.app"],
   })
 );
 
-/* ===== SMTP Transport (Brevo) ===== */
-const transporter = nodemailer.createTransport({
-  host: process.env.BREVO_SMTP_HOST,
-  port: process.env.BREVO_SMTP_PORT,
-  secure: false, // true only for port 465
-  auth: {
-    user: process.env.BREVO_SMTP_USER,
-    pass: process.env.BREVO_SMTP_PASS,
-  },
-});
-
 /* ===== Test Route ===== */
 app.get("/", (req, res) => {
-  res.send("Portfolio backend 🚀");
+  res.send("Portfolio backend running 🚀");
 });
 
-/* ===== Email Route ===== */
+/* ===== Email Route (Brevo API) ===== */
 app.post("/send-email", async (req, res) => {
   const { name, email, message } = req.body;
 
@@ -46,29 +32,48 @@ app.post("/send-email", async (req, res) => {
   }
 
   try {
-    await transporter.sendMail({
-      from: `"Portfolio Contact" <${process.env.EMAIL_USER}>`,
-      to: process.env.TO_EMAIL,
-      replyTo: email,
-      subject: "Website Portfolio Contact Me Message Form",
-      html: `
-        <h3>New Portfolio Message</h3>
-        <p>${message}</p>
-        <hr />
-        <p><strong>Sender Name:</strong> ${name}</p>
-        <p><strong>Sender Email:</strong> ${email}</p>
-      `,
+    const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "api-key": process.env.BREVO_API_KEY,
+      },
+      body: JSON.stringify({
+        sender: {
+          email: process.env.BREVO_SENDER_EMAIL,
+          name: "Portfolio Contact",
+        },
+        to: [{ email: process.env.TO_EMAIL }],
+        replyTo: { email },
+        subject: "Website Portfolio Contact Me Message Form",
+        htmlContent: `
+          <h3>New Portfolio Message</h3>
+          <p>${message}</p>
+          <hr />
+          <p><strong>Sender Name:</strong> ${name}</p>
+          <p><strong>Sender Email:</strong> ${email}</p>
+        `,
+      }),
     });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Brevo API Error:", errorText);
+      return res.status(500).json({
+        success: false,
+        message: "Email failed to send",
+      });
+    }
 
     res.status(200).json({
       success: true,
       message: "Email sent successfully",
     });
   } catch (error) {
-    console.error("Brevo SMTP Error:", error);
+    console.error("Server Error:", error);
     res.status(500).json({
       success: false,
-      message: "Email failed to send",
+      message: "Server error",
     });
   }
 });
