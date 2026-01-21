@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { useState, useEffect } from "react";
-import NavbarSkeleton from '../Skeleton/NavbarSkeleton'
+import NavbarSkeleton from "../Skeleton/NavbarSkeleton";
+import { motion, AnimatePresence } from "framer-motion";
 
 const navLinks = [
   { name: "Home", path: "/" },
@@ -45,7 +46,12 @@ export default function Navbar() {
             {/* Desktop Links */}
             <div className="hidden md:flex items-center space-x-8">
               {navLinks.map((link) => (
-                <NavLink key={link.name} to={link.path} className={getLinkClass} draggable={false}>
+                <NavLink
+                  key={link.name}
+                  to={link.path}
+                  className={getLinkClass}
+                  draggable={false}
+                >
                   {link.name}
                 </NavLink>
               ))}
@@ -53,38 +59,70 @@ export default function Navbar() {
 
             {/* Mobile Menu Button */}
             <button
-              className="md:hidden text-slate-300 text-2xl hover:text-emerald-400 transition"
+              className={`md:hidden text-2xl transition-colors duration-300 cursor-pointer
+    ${isOpen ? "text-emerald-400" : "text-slate-300 hover:text-emerald-400"}
+  `}
               onClick={() => setIsOpen(!isOpen)}
               aria-label="Toggle menu"
             >
-              ☰
+              <span className="relative w-6 h-6 block">
+                <span
+                  className={`absolute inset-0 transition-all duration-300
+        ${isOpen ? "opacity-0 rotate-90" : "opacity-100 rotate-0"}
+      `}
+                >
+                  ☰
+                </span>
+                <span
+                  className={`absolute inset-0 transition-all duration-300
+        ${isOpen ? "opacity-100 rotate-0" : "opacity-0 -rotate-90"}
+      `}
+                >
+                  ✕
+                </span>
+              </span>
             </button>
           </div>
         )}
       </div>
 
       {/* Mobile Menu */}
-      {!loading && isOpen && (
-        <div className="md:hidden bg-slate-900 border-t border-slate-700">
-          <div className="max-w-[1366px] mx-auto px-4 py-4 flex flex-col space-y-3">
-            {navLinks.map((link) => (
-              <NavLink
-                key={link.name}
-                to={link.path}
-                onClick={() => setIsOpen(false)}
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-emerald-400 font-semibold"
-                    : "text-slate-300 hover:text-emerald-400 transition"
-                }
-              >
-                {link.name}
-              </NavLink>
-            ))}
-          </div>
-        </div>
-      )}
+      <AnimatePresence mode="wait">
+        {!loading && isOpen && (
+          <motion.div
+            key="mobile-menu"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="md:hidden border-t border-slate-700 overflow-hidden"
+          >
+            <div className="max-w-341.5 mx-auto px-4 py-4 flex flex-col space-y-3 ">
+              {navLinks.map((link, index) => (
+                <motion.div
+                  key={link.name}
+                  initial={{ x: -10, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -10, opacity: 0 }}
+                  transition={{ duration: 0.2, delay: index * 0.05 }}
+                >
+                  <NavLink
+                    to={link.path}
+                    onClick={() => setIsOpen(false)}
+                    className={({ isActive }) =>
+                      isActive
+                        ? "text-emerald-400 font-semibold"
+                        : "text-slate-300 hover:text-emerald-400 transition"
+                    }
+                  >
+                    {link.name}
+                  </NavLink>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }
-
